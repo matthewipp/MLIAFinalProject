@@ -40,7 +40,7 @@ def splitSingleImage(args, num):
     images = []
     for i in range(imagesPerLength):
         for j in range(imagesPerLength):
-            images.append(img[i*args.endSize])
+            images.append(img[i*args.endSize:(i+1)*args.endSize], img[j*args.endSize:(j+1)*args.endSize])
 
 
 if __name__ == "__main__":
@@ -54,7 +54,3 @@ if __name__ == "__main__":
     final_images = []
     for i in range(args.lowRange, args.highRange+1):
         final_images += splitSingleImage(args, i)
-        
-    
-
-    
