@@ -9,7 +9,7 @@ from networks.vit_seg_modeling import VisionTransformer as ViT_seg
 from networks.vit_seg_modeling import CONFIGS as CONFIGS_ViT_seg
 from trainer import trainer_synapse
 
-# python train.py --root_path [training data path] --dataset Oxide --list_dir (list file of files to use) --num_classes 2 --deterministic 0 --img_size 64 --seed 69420 --vit_patches_size 32
+# python train.py --root_path ./Data/npzs --dataset Oxide --list_dir ./names.txt --num_classes 2 --deterministic 0 --img_size 64 --seed 69420 --vit_patches_size 32
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--root_path', type=str,

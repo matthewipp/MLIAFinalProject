@@ -1,6 +1,7 @@
 # Splits of into smaller size
 import argparse
 from PIL import Image
+import numpy as np
 import os
 
 # EXAMPLE
@@ -52,5 +53,10 @@ if __name__ == "__main__":
         print("End size cannot be 0")
         exit()
     final_images = []
+    # convert images
     for i in range(args.lowRange, args.highRange+1):
         final_images += splitSingleImage(args, i)
+    # Save final images
+    with open('splitImages.npy', 'wb') as f:
+        for img in final_images:
+            np.save(f, img)
