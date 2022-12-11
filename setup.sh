@@ -1,3 +1,3 @@
 module load singularity
 module load pytorch/1.12.0
-alias torch="singularity run --nv $CONTAINERDIR/pytorch-1.12.0.sif "
+singularity run --nv /share/resources/containers/singularity/pytorch-1.12.0.sif train.py --root_path ../Data/augmented --list_dir ../lists/lists_Synapse --num_classes 2 --deterministic 0 --img_size 64 --seed 69420 --vit_patches_size 16 --n_gpu 2
