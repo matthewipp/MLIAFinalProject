@@ -28,6 +28,7 @@ parser.add_argument('--max_iterations', type=int,default=20000, help='maximum ep
 parser.add_argument('--max_epochs', type=int, default=30, help='maximum epoch number to train')
 parser.add_argument('--batch_size', type=int, default=24,
                     help='batch_size per gpu')
+parser.add_argument('--n_gpu', type=int, default=1, help='total gpu')
 parser.add_argument('--img_size', type=int, default=224, help='input patch size of network input')
 parser.add_argument('--is_savenii', action="store_true", help='whether to save results during inference')
 
@@ -49,7 +50,7 @@ def inference(args, model, test_save_path=None):
     model.eval()
     metric_list = 0.0
     for i_batch, sampled_batch in tqdm(enumerate(testloader)):
-        h, w = sampled_batch["image"].size()[2:]
+        h, w = sampled_batch["image"].size()[1:]
         image, label, case_name = sampled_batch["image"], sampled_batch["label"], sampled_batch['case_name'][0]
         metric_i = test_single_volume(image, label, model, classes=args.num_classes, patch_size=[args.img_size, args.img_size],
                                       test_save_path=test_save_path, case=case_name, z_spacing=args.z_spacing)
@@ -80,17 +81,17 @@ if __name__ == "__main__":
     dataset_config = {
         'Synapse': {
             'Dataset': Synapse_dataset,
-            'volume_path': '../data/Synapse/test_vol_h5',
-            'list_dir': './lists/lists_Synapse',
-            'num_classes': 9,
+            # 'volume_path': '../data/Synapse/test_vol_h5',
+            # 'list_dir': './lists/lists_Synapse',
+            # 'num_classes': 9,
             'z_spacing': 1,
         },
     }
     dataset_name = args.dataset
-    args.num_classes = dataset_config[dataset_name]['num_classes']
-    args.volume_path = dataset_config[dataset_name]['volume_path']
+    # args.num_classes = dataset_config[dataset_name]['num_classes']
+    # args.volume_path = dataset_config[dataset_name]['volume_path']
     args.Dataset = dataset_config[dataset_name]['Dataset']
-    args.list_dir = dataset_config[dataset_name]['list_dir']
+    # args.list_dir = dataset_config[dataset_name]['list_dir']
     args.z_spacing = dataset_config[dataset_name]['z_spacing']
     args.is_pretrain = True
 
@@ -116,6 +117,8 @@ if __name__ == "__main__":
     if args.vit_name.find('R50') !=-1:
         config_vit.patches.grid = (int(args.img_size/args.vit_patches_size), int(args.img_size/args.vit_patches_size))
     net = ViT_seg(config_vit, img_size=args.img_size, num_classes=config_vit.n_classes).cuda()
+    if (args.n_gpu > 1):
+        net = nn.DataParallel(net)
 
     snapshot = os.path.join(snapshot_path, 'best_model.pth')
     if not os.path.exists(snapshot): snapshot = snapshot.replace('best_model', 'epoch_'+str(args.max_epochs-1))
