@@ -4,7 +4,7 @@
 #SBATCH --gres=gpu:rtx2080:2
 #SBATCH -c 1
 #SBATCH -t 00:04:00
-#SBATCH -o ../outputs/trainOutput.txt
+#SBATCH -o ../outputs/Output.txt
 
 module load singularity
 module load pytorch/1.12.0
