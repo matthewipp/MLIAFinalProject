@@ -10,6 +10,11 @@ module load singularity
 module load pytorch/1.12.0
 
 MAX_EPOCHS=(200 300 400 500 600 700 800 900)
+
+if [ $# -eq 1 ]; then
+	MAX_EPOCHS=("$1")
+fi
+
 GPUS=2
 PATCH_SIZE=16
 
